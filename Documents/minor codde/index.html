@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoSphere</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<body>
+
+<header>
+<h1>EcoSphere</h1>
+
+<nav>
+<a href="#home">Home</a>
+<a href="#ecosystems">Ecosystems</a>
+<a href="#volunteer">Volunteer</a>
+<a href="#report">Report</a>
+<a href="#gallery">Gallery</a>
+<a href="#testimonials">Testimonials</a>
+<a href="#dashboard">Dashboard</a>
+<button onclick="openLogin()">Login</button>
+</nav>
+</header>
+
+
+<section id="home" class="hero">
+<div class="hero-content">
+<h2>Sustainable Tourism & Ecosystem Conservation</h2>
+<br><br>
+<p>
+EcoSphere connects tourists, volunteers, NGOs and government
+agencies to protect ecosystems while promoting responsible tourism.
+</p>
+<br><br>
+<button onclick="scrollToSection('ecosystems')">
+Explore Ecosystems
+</button>
+</div>
+</section>
+
+
+<section id="ecosystems">
+<h2>Protected Ecosystems</h2>
+
+<div class="card-grid">
+
+<div class="card">
+<h3>Forests</h3>
+<p>Protecting biodiversity and preventing deforestation.</p>
+</div>
+
+<div class="card">
+<h3>Marine</h3>
+<p>Preserving oceans, coral reefs and marine wildlife.</p>
+</div>
+
+<div class="card">
+<h3>Mountains</h3>
+<p>Sustainable trekking and wildlife conservation.</p>
+</div>
+
+<div class="card">
+<h3>Wetlands</h3>
+<p>Protecting migratory birds and water ecosystems.</p>
+</div>
+
+<div class="card">
+<h3>Deserts</h3>
+<p>Maintaining fragile desert ecological balance.</p>
+</div>
+
+<div class="card">
+<h3>Urban Ecosystems</h3>
+<p>Promoting sustainable and green cities.</p>
+</div>
+
+</div>
+
+<div class="center-btn">
+<button onclick="goToExplore()">Explore More</button>
+</div>
+
+</section>
+
+
+
+<section id="volunteer">
+<h2>Conservation Activities</h2>
+
+<div class="card-grid">
+
+<div class="card">
+<h3>Beach Cleanup</h3>
+<p>Location: Goa</p>
+<p>Date: 15 July</p>
+<button>Join</button>
+</div>
+
+<div class="card">
+<h3>Tree Plantation</h3>
+<p>Location: Himachal</p>
+<p>Date: 20 July</p>
+<button>Join</button>
+</div>
+
+<div class="card">
+<h3>River Restoration</h3>
+<p>Location: Uttarakhand</p>
+<p>Date: 1 August</p>
+<button>Join</button>
+</div>
+
+</div>
+
+<div class="center-btn">
+<button onclick="goToActivities()">View All Activities</button>
+</div>
+
+</section>
+
+
+
+<section id="report">
+  <h2>Report Environmental Issue</h2>
+
+  <div class="report-container">
+
+    <!-- LEFT FORM -->
+    <form id="reportForm" class="report-form">
+
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="locationInput" placeholder="Enter location">
+      </div>
+
+      <div class="form-group">
+        <label>Issue Type</label>
+        <select>
+          <option value="">Select Issue</option>
+          <option>Pollution</option>
+          <option>Deforestation</option>
+          <option>Waste Dumping</option>
+          <option>Wildlife Threat</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea placeholder="Describe the issue"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">Submit Report</button>
+
+    </form>
+
+    <!-- RIGHT MAP -->
+    <div class="map-container">
+      <div id="map"></div>
+      <p class="map-note">📍 Click on map to select location</p>
+    </div>
+
+      <button type="button" class="location-btn" onclick="getUserLocation()">
+  📍 Use My Current Location
+</button>
+
+
+  </div>
+</section>
+
+
+
+
+<section id="gallery">
+<h2>Ground Work Gallery</h2>
+
+<div class="gallery-grid">
+
+<div class="gallery-card">
+<img src="https://images.unsplash.com/photo-1618477461853-cf6ed80faba5">
+<p>Beach Cleanup Drive</p>
+</div>
+
+<div class="gallery-card">
+<img src="https://images.unsplash.com/photo-1589923188900-85dae523342b">
+<p>Tree Plantation Activity</p>
+</div>
+
+<div class="gallery-card">
+<img src="https://tse2.mm.bing.net/th/id/OIP.8P0GiIjVw1jO6t5_Xms2IQHaEK?rs=1&pid=ImgDetMain&o=7&rm=3">
+<p>River Restoration Work</p>
+</div>
+
+<div class="gallery-card">
+<img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e">
+<p>Forest Conservation Campaign</p>
+</div>
+
+</div>
+
+</section>
+
+
+
+<section id="testimonials">
+<h2>NGO Testimonials</h2>
+
+<div class="testimonial-grid">
+
+<div class="testimonial">
+<p>EcoSphere helped us organize volunteer clean-up drives efficiently.</p>
+<h4>GreenEarth NGO</h4>
+</div>
+
+<div class="testimonial">
+<p>We were able to monitor pollution reports and respond faster.</p>
+<h4>OceanCare Foundation</h4>
+</div>
+
+<div class="testimonial">
+<p>The volunteer participation boosted our forest restoration project.</p>
+<h4>WildLife Protectors</h4>
+</div>
+
+</div>
+
+</section>
+
+
+
+<section id="dashboard">
+<h2>Impact Dashboard</h2>
+
+<div class="stats">
+
+<div class="stat">
+<h3>1200+</h3>
+<p>Issues Reported</p>
+</div>
+
+<div class="stat">
+<h3>500+</h3>
+<p>Volunteers</p>
+</div>
+
+<div class="stat">
+<h3>85</h3>
+<p>Activities</p>
+</div>
+
+<div class="stat">
+<h3>15</h3>
+<p>NGO Partners</p>
+</div>
+
+</div>
+
+</section>
+
+
+
+<footer>
+<p>EcoSphere © 2026</p>
+</footer>
+
+
+
+<!-- LOGIN MODAL -->
+
+<div class="modal" id="loginModal">
+
+<div class="modal-content">
+
+<h2>Login / Sign Up</h2>
+
+<input type="text" placeholder="Full Name">
+<input type="email" placeholder="Email">
+<input type="password" placeholder="Password">
+
+<select>
+<option>Select Role</option>
+<option>Tourist</option>
+<option>Volunteer</option>
+<option>NGO</option>
+<option>Government</option>
+</select>
+
+<div class="modal-buttons">
+<button onclick="login()">Sign In</button>
+<button onclick="signup()">Sign Up</button>
+</div>
+
+<button class="close" onclick="closeLogin()">Close</button>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
