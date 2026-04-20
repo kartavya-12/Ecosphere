@@ -38,7 +38,7 @@ export default function AuthProvider({ children }) {
     };
   }, []);
 
-  async function fetchProfile(authUser) {
+  async function fetchProfile(authUser, throwError = false) {
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -65,6 +65,7 @@ export default function AuthProvider({ children }) {
            await supabase.auth.signOut();
            setUser(null);
            setLoading(false);
+           if (throwError) throw insertErr;
            return;
         }
         profileData = newProfile;
@@ -86,6 +87,7 @@ export default function AuthProvider({ children }) {
       // Stale or corrupted session, better to clear it to avoid FK errors downstream
       await supabase.auth.signOut();
       setUser(null);
+      if (throwError) throw err;
     } finally {
       setLoading(false);
     }
@@ -103,7 +105,7 @@ export default function AuthProvider({ children }) {
     }
     
     if (data.user) {
-      await fetchProfile(data.user);
+      await fetchProfile(data.user, true);
     } else {
       setLoading(false);
     }
@@ -129,6 +131,12 @@ export default function AuthProvider({ children }) {
       throw error;
     }
 
+    // Supabase returns session as null if email confirmation is required
+    if (!data.session) {
+      setLoading(false);
+      throw new Error("Please verify your email address to continue.");
+    }
+
     // Create profile entry
     if (data.user) {
       const { error: insertError } = await supabase.from('profiles').insert([
@@ -138,7 +146,7 @@ export default function AuthProvider({ children }) {
         console.error("Signup profile insert error:", insertError);
       }
       
-      await fetchProfile(data.user);
+      await fetchProfile(data.user, true);
     } else {
       setLoading(false);
     }
