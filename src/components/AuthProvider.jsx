@@ -101,8 +101,13 @@ export default function AuthProvider({ children }) {
       setLoading(false);
       throw error;
     }
-    // onAuthStateChange handles fetchProfile automatically via SIGNED_IN event
-    // returning user just to fulfill promise chain before redirect
+    
+    if (data.user) {
+      await fetchProfile(data.user);
+    } else {
+      setLoading(false);
+    }
+    
     return data.user;
   }
 
@@ -132,7 +137,8 @@ export default function AuthProvider({ children }) {
       if (insertError && insertError.code !== '23505') {
         console.error("Signup profile insert error:", insertError);
       }
-      // onAuthStateChange handles fetchProfile
+      
+      await fetchProfile(data.user);
     } else {
       setLoading(false);
     }
