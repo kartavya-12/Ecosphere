@@ -7,19 +7,26 @@ export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check active session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        fetchProfile(session.user);
-      } else {
+    // Check active session and rigorously verify it's not a stale/deleted user
+    supabase.auth.getUser().then(({ data: { user }, error }) => {
+      if (error || !user) {
+        supabase.auth.signOut();
         setLoading(false);
+      } else {
+        fetchProfile(user);
       }
     }).catch(() => setLoading(false));
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session) {
-        await fetchProfile(session.user);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await fetchProfile(user);
+        } else {
+          setUser(null);
+          setLoading(false);
+        }
       } else {
         setUser(null);
         setLoading(false);
@@ -57,9 +64,14 @@ export default function AuthProvider({ children }) {
           rank: 'Eco-Warrior'
         };
         const { error: insertErr } = await supabase.from('profiles').insert([newProfile]);
-        if (!insertErr) {
-          profileData = newProfile;
+        if (insertErr) {
+           console.error("Failed to inject missing profile. Stale session?", insertErr);
+           await supabase.auth.signOut();
+           setUser(null);
+           setLoading(false);
+           return;
         }
+        profileData = newProfile;
       } else if (error) {
         throw error;
       }
@@ -75,13 +87,9 @@ export default function AuthProvider({ children }) {
       });
     } catch (err) {
       console.error('Auth Profile Fetch Error:', err);
-      // Fallback to basic auth info
-      setUser({
-        id: authUser.id,
-        email: authUser.email,
-        name: authUser.user_metadata.name || 'User',
-        role: authUser.user_metadata.role || 'community',
-      });
+      // Stale or corrupted session, better to clear it to avoid FK errors downstream
+      await supabase.auth.signOut();
+      setUser(null);
     } finally {
       setLoading(false);
     }
